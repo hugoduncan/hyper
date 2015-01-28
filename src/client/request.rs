@@ -1,5 +1,5 @@
 //! Client Requests
-use std::io::{BufferedWriter, IoResult};
+use std::old_io::{BufferedWriter, IoResult};
 
 use url::Url;
 
@@ -159,6 +159,11 @@ impl Writer for Request<Streaming> {
     #[inline]
     fn write(&mut self, msg: &[u8]) -> IoResult<()> {
         self.body.write(msg)
+    }
+
+    #[inline]
+    fn write_all(&mut self, msg: &[u8]) -> IoResult<()> {
+        self.body.write_all(msg)
     }
 
     #[inline]

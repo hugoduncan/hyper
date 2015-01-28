@@ -1,10 +1,10 @@
 //! A collection of traits abstracting over Listeners and Streams.
 use std::any::{Any, TypeId};
 use std::fmt;
-use std::io::{IoResult, IoError, ConnectionAborted, InvalidInput, OtherIoError,
+use std::old_io::{IoResult, IoError, ConnectionAborted, InvalidInput, OtherIoError,
               Stream, Listener, Acceptor};
-use std::io::net::ip::{SocketAddr, ToSocketAddr, Port};
-use std::io::net::tcp::{TcpStream, TcpListener, TcpAcceptor};
+use std::old_io::net::ip::{SocketAddr, ToSocketAddr, Port};
+use std::old_io::net::tcp::{TcpStream, TcpListener, TcpAcceptor};
 use std::mem;
 use std::raw::{self, TraitObject};
 use std::sync::Arc;
@@ -115,6 +115,9 @@ impl Writer for Box<NetworkStream + Send> {
     fn write(&mut self, msg: &[u8]) -> IoResult<()> { (**self).write(msg) }
 
     #[inline]
+    fn write_all(&mut self, msg: &[u8]) -> IoResult<()> { (**self).write_all(msg) }
+
+    #[inline]
     fn flush(&mut self) -> IoResult<()> { (**self).flush() }
 }
 
@@ -126,6 +129,9 @@ impl<'a> Reader for &'a mut NetworkStream {
 impl<'a> Writer for &'a mut NetworkStream {
     #[inline]
     fn write(&mut self, msg: &[u8]) -> IoResult<()> { (**self).write(msg) }
+
+    #[inline]
+    fn write_all(&mut self, msg: &[u8]) -> IoResult<()> { (**self).write_all(msg) }
 
     #[inline]
     fn flush(&mut self) -> IoResult<()> { (**self).flush() }
@@ -286,6 +292,13 @@ impl Writer for HttpStream {
         match *self {
             HttpStream::Http(ref mut inner) => inner.write(msg),
             HttpStream::Https(ref mut inner) => inner.write(msg)
+        }
+    }
+
+    fn write_all(&mut self, msg: &[u8]) -> IoResult<()> {
+        match *self {
+            HttpStream::Http(ref mut inner) => inner.write_all(msg),
+            HttpStream::Https(ref mut inner) => inner.write_all(msg)
         }
     }
     #[inline]

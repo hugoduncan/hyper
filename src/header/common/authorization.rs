@@ -70,7 +70,7 @@ impl Scheme for String {
     }
 
     fn fmt_scheme(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		write!(f, "{}", self)
+                write!(f, "{}", self)
     }
 }
 
@@ -141,7 +141,7 @@ impl FromStr for Basic {
 
 #[cfg(test)]
 mod tests {
-    use std::io::MemReader;
+    use std::old_io::MemReader;
     use super::{Authorization, Basic};
     use super::super::super::{Headers};
 
@@ -196,4 +196,3 @@ mod tests {
 
 bench_header!(raw, Authorization<String>, { vec![b"foo bar baz".to_vec()] });
 bench_header!(basic, Authorization<Basic>, { vec![b"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==".to_vec()] });
-

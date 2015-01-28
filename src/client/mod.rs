@@ -18,8 +18,8 @@
 //! to the `status`, the `headers`, and the response body via the `Writer`
 //! trait.
 use std::default::Default;
-use std::io::IoResult;
-use std::io::util::copy;
+use std::old_io::IoResult;
+use std::old_io::util::copy;
 use std::iter::Extend;
 
 use url::UrlParser;
@@ -324,10 +324,10 @@ pub enum RedirectPolicy {
     FollowIf(fn(&Url) -> bool),
 }
 
-// This is a hack because of upstream typesystem issues. 
+// This is a hack because of upstream typesystem issues.
 impl Clone for RedirectPolicy {
     fn clone(&self) -> RedirectPolicy {
-        *self 
+        *self
     }
 }
 

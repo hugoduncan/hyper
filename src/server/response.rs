@@ -2,7 +2,7 @@
 //!
 //! These are responses sent by a `hyper::Server` to clients, after
 //! receiving a request.
-use std::io::IoResult;
+use std::old_io::IoResult;
 
 use time::now_utc;
 
@@ -144,6 +144,11 @@ impl<'a> Writer for Response<'a, Streaming> {
     fn write(&mut self, msg: &[u8]) -> IoResult<()> {
         debug!("write {:?} bytes", msg.len());
         self.body.write(msg)
+    }
+
+    fn write_all(&mut self, msg: &[u8]) -> IoResult<()> {
+        debug!("write_all {:?} bytes", msg.len());
+        self.body.write_all(msg)
     }
 
     fn flush(&mut self) -> IoResult<()> {
